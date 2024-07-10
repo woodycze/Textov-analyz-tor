@@ -1,0 +1,127 @@
+"""
+textAnalyzator.py: První projekt do Engeto Online Python Akademie
+author: Dominik Sodomka
+email: dominiksodomka@gmail.com
+discord: woodycz#0318
+"""
+# Předem se omlouvám jestli zde bude něco nevzhledně 
+# napsáno. Mám nějaké zvyky z programování JAVY 
+# ve škole. Samozřejmě se budu snažit psát tak,
+# jak se má :)
+
+# list uživatelů - přihlašovací jméno a heslo
+user_list = [
+    {"user": "bob", "password": "123"},
+    {"user": "ann", "password": "pass123"},
+    {"user": "mike", "password": "password123"},
+    {"user": "liz", "password": "pass123"}
+]
+
+# texty, se kterými program pracuje
+TEXTS = ['''
+Situated about 10 miles west of Kemmerer,
+Fossil Butte is a ruggedly impressive
+topographic feature that rises sharply
+some 1000 feet above Twin Creek Valley
+to an elevation of more than 7500 feet
+above sea level. The butte is located just
+north of US 30N and the Union Pacific Railroad,
+which traverse the valley. ''',
+'''At the base of Fossil Butte are the bright
+red, purple, yellow and gray beds of the Wasatch
+Formation. Eroded portions of these horizontal
+beds slope gradually upward from the valley floor
+and steepen abruptly. Overlying them and extending
+to the top of the butte are the much steeper
+buff-to-white beds of the Green River Formation,
+which are about 300 feet thick.''',
+'''The monument contains 8198 acres and protects
+a portion of the largest deposit of freshwater fish
+fossils in the world. The richest fossil fish deposits
+are found in multiple limestone layers, which lie some
+100 feet below the top of the butte. The fossils
+represent several varieties of perch, as well as
+other freshwater genera and herring similar to those
+in modern oceans. Other fish such as paddlefish,
+garpike and stingray are also present.'''
+]
+
+user_input = input("username: ") # uživatel zadá uživatelské jméno
+password_input = input("password: ") # zde heslo
+print("----------------------------------------")
+# cyklus for projede list uživatelů a porovná jméno s heslem
+# zde jsem nastavil dynamicky podle velikosti listu s jmény a hesly
+for a in range (len(user_list)):
+    if (user_input == user_list[a]["user"] and
+        password_input == user_list[a]["password"]):
+        print("Welcome to the app,",user_list[a]["user"])
+        break
+    elif (user_input == user_list[a]["user"] and
+        password_input != user_list[a]["password"]):
+        print("Incorrect login credentials, terminating the program...")
+        exit()
+    else:
+        print("Unregistred user, terminating the program...")
+        exit()
+
+# vypíše počet textů k analyzování
+print("We have",len(TEXTS),"texts to be analyzed.")
+print("----------------------------------------")
+# uživatel zadá požadované číslo textu
+select_number = input("Enter a number btw. 1 and "+str(len(TEXTS))+" to select: ")
+# ověření zde je vstup číslo a poté jestli není menší než nula
+# a větší než počet textů v knihovně
+if select_number.isdigit(): 
+    if int(select_number) <= int(len(TEXTS)) and int(select_number) > 0:
+        select_text = TEXTS[int(select_number)-1] #odečtení 1 protože začínáme TEXTS[0]
+    else:
+        print("Incorrect. Enter a number btw. 1 and "+str(len(TEXTS))+", terminating the program...")
+        exit()
+else:
+    print("Invalid entry. Enter only numbers, terminating the program...")
+    exit()
+print("----------------------------------------")
+# zde se texty rozdělí na jednotlivá slova a zároveň
+# se odstraní interpunkční znaménka pro pozdější snazší analýzu
+word_split = [
+    word.replace(",","").replace(".","").replace("?","").replace("!","") 
+    for word in select_text.split()
+]
+# spočítání počtu slov
+count_words = len(word_split)
+# zde se pomocí sum sečtou všechny slova co splňují podmínku
+# za každé slovo co splní podmínku je přičtena 1
+count_titlecase = sum(1 for word in word_split if word.istitle()) 
+count_uppercase = sum(1 for word in word_split if word.isupper()
+                    and not word[0].isdigit())
+count_lowercase = sum(1 for word in word_split if word.islower()
+                    and not word[0].isdigit())
+count_numeric_string = sum(1 for word in word_split if word.isnumeric())
+# zde se všechny slova co jsou numerická převedou na int a následně
+# pomocí sum sečtou 
+count_numbers = sum(int(word) for word in word_split if word.isnumeric())
+# všechna slova co jsou alfabetická jsou převedena na číslo(jejich délka)
+# přičtena jednička protože zase začínáme 0 ale my potřebujeme
+# skutečnou délku
+word_lenght = [len(word)+1 for word in word_split if word.isalpha]
+
+# zde se vypisují jednotlivé zanalyzované procesy
+print("There are",count_words,"words in the selected text.")
+print("There are",count_titlecase,"titlecase words.")
+print("There are",count_uppercase,"uppercase words.")
+print("There are",count_lowercase,"lowercase words.")
+print("There are",count_numeric_string,"numeric strings.")
+print("The sum of all the numbers",count_numbers)
+print("----------------------------------------")
+print("LEN|  OCCURENCES  |NR.")
+print("----------------------------------------")
+
+# cyklus for, který má rozsah do nejdelšího analyzovaného slova
+# když v textu není daná délka slova je přeskočeno pomocí continue
+# jinak vypsáno pomocí print, které je formátováno pro přehlednost
+# (jak provést formátování jsem nalezl na internetu)
+for b in range (max(word_lenght)):
+    if not word_lenght.count(b):
+        continue
+    else:
+        print(f"{b:<2} | {'*' * b:{max(word_lenght)}} | {word_lenght.count(b)}")
