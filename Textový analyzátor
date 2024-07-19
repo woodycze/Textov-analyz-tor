@@ -8,6 +8,7 @@ discord: woodycz#0318
 # napsáno. Mám nějaké zvyky z programování JAVY 
 # ve škole. Samozřejmě se budu snažit psát tak,
 # jak se má :)
+import string
 
 # list uživatelů - přihlašovací jméno a heslo
 user_list = [
@@ -49,6 +50,7 @@ garpike and stingray are also present.'''
 user_input = input("username: ") # uživatel zadá uživatelské jméno
 password_input = input("password: ") # zde heslo
 print("----------------------------------------")
+
 # cyklus for projede list uživatelů a porovná jméno s heslem
 # zde jsem nastavil dynamicky podle velikosti listu s jmény a hesly
 for a in range (len(user_list)):
@@ -67,43 +69,56 @@ for a in range (len(user_list)):
 # vypíše počet textů k analyzování
 print("We have",len(TEXTS),"texts to be analyzed.")
 print("----------------------------------------")
+
 # uživatel zadá požadované číslo textu
 select_number = input("Enter a number btw. 1 and "+str(len(TEXTS))+" to select: ")
+
 # ověření zde je vstup číslo a poté jestli není menší než nula
 # a větší než počet textů v knihovně
 if select_number.isdigit(): 
     if int(select_number) <= int(len(TEXTS)) and int(select_number) > 0:
         select_text = TEXTS[int(select_number)-1] #odečtení 1 protože začínáme TEXTS[0]
     else:
-        print("Incorrect. Enter a number btw. 1 and "+str(len(TEXTS))+", terminating the program...")
+        print("Incorrect. Enter a number btw. 1 and "
+              +str(len(TEXTS))+", terminating the program...")
         exit()
 else:
     print("Invalid entry. Enter only numbers, terminating the program...")
     exit()
 print("----------------------------------------")
+
 # zde se texty rozdělí na jednotlivá slova a zároveň
 # se odstraní interpunkční znaménka pro pozdější snazší analýzu
-word_split = [
-    word.replace(",","").replace(".","").replace("?","").replace("!","") 
-    for word in select_text.split()
-]
+word_split = []
+for word in select_text.split():
+    for char in string.punctuation:
+        word = word.replace(char, "")
+    word_split.append(word)
+
 # spočítání počtu slov
 count_words = len(word_split)
-# zde se pomocí sum sečtou všechny slova co splňují podmínku
-# za každé slovo co splní podmínku je přičtena 1
-count_titlecase = sum(1 for word in word_split if word.istitle()) 
-count_uppercase = sum(1 for word in word_split if word.isupper()
-                    and not word[0].isdigit())
-count_lowercase = sum(1 for word in word_split if word.islower()
-                    and not word[0].isdigit())
-count_numeric_string = sum(1 for word in word_split if word.isnumeric())
-# zde se všechny slova co jsou numerická převedou na int a následně
-# pomocí sum sečtou 
-count_numbers = sum(int(word) for word in word_split if word.isnumeric())
-# všechna slova co jsou alfabetická jsou převedena na číslo(jejich délka)
-# přičtena jednička protože zase začínáme 0 ale my potřebujeme
-# skutečnou délku
-word_lenght = [len(word)+1 for word in word_split if word.isalpha]
+
+# vytvoření a definice proměnných
+count_titlecase = 0
+count_uppercase = 0
+count_lowercase = 0
+count_numeric_string = 0
+count_numbers = 0
+word_lenght = []
+
+# for cyklus pro analýzu slov
+for word in word_split:
+    if word[0].istitle() and not word[0].isdigit():
+        count_titlecase += 1
+    if word.isupper() and not word[0].isdigit():
+        count_uppercase += 1
+    if word.islower() and not word[0].isdigit():
+        count_lowercase += 1
+    if word.isnumeric():
+        count_numeric_string += 1
+        count_numbers += int(word)
+
+    word_lenght.append(len(word))
 
 # zde se vypisují jednotlivé zanalyzované procesy
 print("There are",count_words,"words in the selected text.")
@@ -120,8 +135,9 @@ print("----------------------------------------")
 # když v textu není daná délka slova je přeskočeno pomocí continue
 # jinak vypsáno pomocí print, které je formátováno pro přehlednost
 # (jak provést formátování jsem nalezl na internetu)
-for b in range (max(word_lenght)):
+for b in range (max(word_lenght) + 1):
     if not word_lenght.count(b):
         continue
     else:
-        print(f"{b:<2} | {'*' * b:{max(word_lenght)}} | {word_lenght.count(b)}")
+        print(f"{b:<2} | {'*' * word_lenght.count(b):
+                {max(word_lenght)+1}} | {word_lenght.count(b)}")
