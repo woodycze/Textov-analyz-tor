@@ -1,1 +1,1 @@
-Repozitář s ENGETO projekty pro certifikaci.
+Repozitář s mými programovacími projekty.
