@@ -4,10 +4,6 @@ author: Dominik Sodomka
 email: dominiksodomka@gmail.com
 discord: woodycz#0318
 """
-# Předem se omlouvám jestli zde bude něco nevzhledně 
-# napsáno. Mám nějaké zvyky z programování JAVY 
-# ve škole. Samozřejmě se budu snažit psát tak,
-# jak se má :)
 import string
 
 # list uživatelů - přihlašovací jméno a heslo
