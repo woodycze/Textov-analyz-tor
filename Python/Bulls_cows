@@ -1,3 +1,10 @@
+"""
+Bulls_cows.py: Druhý projekt do Engeto Online Python Akademie
+author: Dominik Sodomka
+email: dominiksodomka@gmail.com
+discord: woodycz#0318
+"""
+
 import time
 import random
 
