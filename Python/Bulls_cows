@@ -75,8 +75,8 @@ def hra():
     numbers = generuj_cisla()
     guess_count = 0
     while True:
-        guess_number_list, hadani_pocet = hadej()
-        guess_count += hadani_pocet
+        guess_number_list, guess_count_def = hadej()
+        guess_count += guess_count_def
         bulls, cows = spocitat_bulls_cows(numbers, guess_number_list)
         
         if bulls == 1 and cows == 1:
