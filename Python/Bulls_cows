@@ -4,7 +4,6 @@ author: Dominik Sodomka
 email: dominiksodomka@gmail.com
 discord: woodycz#0318
 """
-
 import time
 import random
 
@@ -28,26 +27,29 @@ def generuj_cisla():
         # kontrola jestli se dané číslo již nenachází v listu
         if new_number not in numbers:
             numbers.append(new_number)
-    print(numbers[0],numbers[1],numbers[2],numbers[3])
     return numbers
 
 # Uživatelský vstup. Hráč zadá 4 místné číslo, které má
 # jen 4 čísla a žádná číslice se neopakuje
 def hadej():
+    guess_count = 0
     while True:
+        guess_count += 1
         guess_number = input("Enter a number:")
         if not guess_number.isdigit() or len(guess_number) != 4:
             print("Input must be 4 digits only. Enter again:")
             continue
 
         guess_number_list = [int(digit) for digit in guess_number]
-        3
         if len(guess_number_list) != len(set(guess_number_list)):
             print("The numbers entered must be unique. Enter again:")
-            continue  
+            continue
+        elif (guess_number_list[0] == 0):
+            print("The first number must not be 0. Enter again:")
+            continue
         else:
             break 
-    return guess_number_list
+    return guess_number_list, guess_count
 
 # Spočítání bulls a cows. Kolikrát uživatel trefil číslo a přímo i pozici.
 # Cyklus for zjišťuje jestli se číslo nachází v listu a jestli je trefena 
@@ -70,25 +72,24 @@ def spocitat_bulls_cows(numbers, guess_number_list):
 # hráči trvá uhodnout číslo a na kolik pokusů         
 def hra():
     start = time.time()
-    guess_count = 0
     numbers = generuj_cisla()
+    guess_count = 0
     while True:
-        guess_count += 1
-        guess_number_list = hadej()
+        guess_number_list, hadani_pocet = hadej()
+        guess_count += hadani_pocet
         bulls, cows = spocitat_bulls_cows(numbers, guess_number_list)
         
         if bulls == 1 and cows == 1:
             print("Bull", bulls, "a cow", cows)
         else:
-            print("Bulls", bulls, "a cows", cows)
-        
-        if numbers == guess_number_list:
+            print("Bulls", bulls, "a cows", cows)    
+        if bulls == 4:
             break
 
     end = time.time()
     total_time = end - start
     formatted_time = time.strftime("%H:%M:%S", time.gmtime(total_time))        
-    print("Correct, you've guessed the right number in", guess_count, "guesses and",formatted_time)
+    print("Correct, you've guessed the right number in", guess_count, "guesses and", formatted_time)
     return guess_count, formatted_time
 
 # Počítání statistiky jednotlivých her, dokud hráč neukončí hru.
